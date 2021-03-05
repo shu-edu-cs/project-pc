@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+    <title>图书共享</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="图书共享" />
+    <meta name="author" content="blus" />
+    <!-- favicons -->
+    <!-- bootstrap core CSS -->
+    <link href="__PUBLIC__/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- fancybox CSS -->
+    <link href="__PUBLIC__/css/jquery.lightbox.css" rel="stylesheet" />
+    <!-- flex slider CSS -->
+    <link href="__PUBLIC__/css/flexslider.css" rel="stylesheet" />
+    <!-- custom styles for this template -->
+    <link href="__PUBLIC__/css/templatemo_style.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+   
+</head>
+
+<body>
+   
+    <section id="templatemo_slideshow">
+        <div class="container">
+            <div id="main-slider" class="flexslider">
+                <ul class="slides">
+                    <li class="row">
+                        <img src="__PUBLIC__/images/templatemo_banner_image_2.jpg" alt="" />
+                        <div class="flex-caption col-md-5 col-md-push-1 hidden-xs">
+                            <h3>图书共享</h3>
+                            <p>看看是否有你喜欢的书籍，也可以分享你的读后见解。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+   <div class="container">
+        <p style="text-align: left;"><input type="input" id="keyword" style="line-height: 28px;width: 180px;" placeholder="作者、书名">&nbsp;&nbsp;<a href="javascript:" style="color: #000" onclick="keywordSearch()">搜索</a></p>
+    </div>
+    
+    <div class="container">
+        <div class="solidline"></div>
+    </div>
+    <section id="templatemo_blog">
+        <div class="container" id="contentContainer">
+          
+        </div>
+    </section>
+
+    <div class="container">
+        <p style="text-align: center;"><a id="loadMore" href="javascript:" style="color: #9e2630" onclick="loadMore()">点击加载更多</a></p>
+    </div>
+    <div class="container">
+        <div class="solidline"></div>
+    </div>
+
+    <div class="" id="templatemo_footer">
+        <div class="col-md-24">
+            <p>Copyright &copy; 2021 上海大学 | <a href="#">图书共享</a> </p>
+        </div>
+    </div> 
+
+<script src="__PUBLIC__/js/jquery.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.scrollto.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.easing.min.js"></script>
+    <script src="__PUBLIC__/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.lightbox.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.flexslider.js"></script>
+    <script src="__PUBLIC__/js/jquery.singlePageNav.min.js"></script>
+    <script src="__PUBLIC__/js/templatemo_script.js?v=2389"></script>
+
+<script type="text/javascript">
+    function support(id,object) {
+        $.post('__URL__/support',{bookId:id},
+            function(result){
+                if(result.status==200){
+                    var span=$(object).next();
+                    var spanCount=parseInt(span.text());
+                    span.text(spanCount+1);
+                }else{
+                    alert(result.msg);
+                }
+            },'json');
+    }
+    var page=1;
+    var keyword="";
+    function loadMore(){
+        page=page+1;
+        $.get('__URL__/loadMore?page='+page+'&keyword='+keyword,function(result){
+            if(result==null || result==false){
+                $("#loadMore").html("没有更多了");
+                return;
+            }
+            for(var i=0;i<result.length;i++){
+                　　var book_name=result[i].book_name==null?'':result[i].book_name;
+                    var public_name=result[i].public_name==null?'暂无':result[i].public_name;
+                    var author=result[i].author==null?'暂无':result[i].author;
+                    var publish_year=result[i].publish_year==null?'暂无':result[i].publish_year;
+                    var remark=result[i].remark==null?'暂无':result[i].remark;
+                    var content=' <div class="row"><div class="col-sm-9"><img width="340" height="220" class="" src="__PUBLIC__/images/none.jpg" alt="" /></div><div class="col-sm-15"><a href="__URL__/detail?id='+result[i].id+'" target="_blank"><h2>'+book_name+'</h2></a><p><span class="glyphicon glyphicon-tag"></span> '+public_name+' &nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span> '+author+' &nbsp;&nbsp;<span class="glyphicon glyphicon-calendar"></span> '+publish_year+' &nbsp;&nbsp;<span class="glyphicon glyphicon-thumbs-up" style="cursor:pointer" onclick="support('+result[i].id+',this)"></span>&nbsp;<span>'+result[i].support_count+'</span></p><p>'+remark+'</p></div></div>';
+                    $("#contentContainer").append(content);
+                }
+        },'json');
+    }
+    function loadInit(){
+        $.get('__URL__/loadMore?page=1',function(result){
+            if(result!=null && result!=false){
+                for(var i=0;i<result.length;i++){
+                　　var book_name=result[i].book_name==null?'':result[i].book_name;
+                    var public_name=result[i].public_name==null?'暂无':result[i].public_name;
+                    var author=result[i].author==null?'暂无':result[i].author;
+                    var publish_year=result[i].publish_year==null?'暂无':result[i].publish_year;
+                    var remark=result[i].remark==null?'暂无':result[i].remark;
+                    var content=' <div class="row"><div class="col-sm-9"><img width="340" height="220" class="" src="__PUBLIC__/images/none.jpg" alt="" /></div><div class="col-sm-15"><a href="__URL__/detail?id='+result[i].id+'" target="_blank"><h2>'+book_name+'</h2></a><p><span class="glyphicon glyphicon-tag"></span> '+public_name+' &nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span> '+author+' &nbsp;&nbsp;<span class="glyphicon glyphicon-calendar"></span> '+publish_year+' &nbsp;&nbsp;<span class="glyphicon glyphicon-thumbs-up" style="cursor:pointer" onclick="support('+result[i].id+',this)"></span>&nbsp;<span>'+result[i].support_count+'</span></p><p>'+remark+'</p></div></div>';
+                    $("#contentContainer").append(content);
+                }
+            }
+
+        },'json');
+    }
+    loadInit();
+    function keywordSearch() {
+        page=1;
+        $("#loadMore").html("点击加载更多");
+        keyword=$("#keyword").val();
+        $("#contentContainer").html("");
+        $.get('__URL__/loadMore?page='+page+'&keyword='+keyword,function(result){
+            if(result!=null && result!=false){
+                for(var i=0;i<result.length;i++){
+                　　var book_name=result[i].book_name==null?'':result[i].book_name;
+                    var public_name=result[i].public_name==null?'暂无':result[i].public_name;
+                    var author=result[i].author==null?'暂无':result[i].author;
+                    var publish_year=result[i].publish_year==null?'暂无':result[i].publish_year;
+                    var remark=result[i].remark==null?'暂无':result[i].remark;
+                    var content=' <div class="row"><div class="col-sm-9"><img width="340" height="220" class="" src="__PUBLIC__/images/none.jpg" alt="" /></div><div class="col-sm-15"><a href="__URL__/detail?id='+result[i].id+'" target="_blank"><h2>'+book_name+'</h2></a><p><span class="glyphicon glyphicon-tag"></span> '+public_name+' &nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span> '+author+' &nbsp;&nbsp;<span class="glyphicon glyphicon-calendar"></span> '+publish_year+' &nbsp;&nbsp;<span class="glyphicon glyphicon-thumbs-up" style="cursor:pointer" onclick="support('+result[i].id+',this)"></span>&nbsp;<span>'+result[i].support_count+'</span></p><p>'+remark+'</p></div></div>';
+                    $("#contentContainer").append(content);
+                }
+            }
+
+        },'json');
+    }
+</script>
+</body>
+
+</html>

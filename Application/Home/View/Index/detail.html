@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+    <title>图书共享</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="图书共享" />
+    <meta name="author" content="blus" />
+    <!-- favicons -->
+    <!-- bootstrap core CSS -->
+    <link href="__PUBLIC__/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- fancybox CSS -->
+    <link href="__PUBLIC__/css/jquery.lightbox.css" rel="stylesheet" />
+    <!-- flex slider CSS -->
+    <link href="__PUBLIC__/css/flexslider.css" rel="stylesheet" />
+    <!-- custom styles for this template -->
+    <link href="__PUBLIC__/css/templatemo_style.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+   
+</head>
+
+<body>
+   
+    <section id="templatemo_slideshow">
+        <div class="container">
+            <div id="main-slider" class="flexslider">
+                <ul class="slides">
+                    <li class="row">
+                        <img src="__PUBLIC__/images/templatemo_banner_image_2.jpg" alt="" />
+                        <div class="flex-caption col-md-5 col-md-push-1 hidden-xs">
+                            <h3>图书共享</h3>
+                            <p>看看是否有你喜欢的书籍，也可以分享你的读后见解。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="solidline"></div>
+    </div>
+    <section id="templatemo_blog">
+        <div class="container">
+           <div class="row"><div class="col-sm-9"><img width="340" height="220" class="" src="__PUBLIC__/images/none.jpg" alt="" /></div><div class="col-sm-15"><h2>{$model["book_name"]}</h2><p><span class="glyphicon glyphicon-tag"></span>{$model["public_name"]} &nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span>{$model["author"]} &nbsp;&nbsp;<span class="glyphicon glyphicon-calendar"></span>{$model["publish_year"]}&nbsp;&nbsp;</p><p>{$model["remark"]}</p></div></div>
+        </div>
+    </section>
+
+    <div class="container">
+    <h3>华山论剑</h3>
+    <div id="contentContainer">
+    
+    </div><br>
+        <p style="text-align: left;"><a id="loadMore" href="javascript:" style="color: #9e2630">点击加载更多评论</a></p>
+    
+    <div class="row"><div class="col-sm-15"><h2></h2>
+    <form method="post" action="__URL__/submitComment">
+       
+        <input type="hidden" id="bookid" name="bookid" value="<?php echo $_GET['id']; ?>">
+        <p><input type="text" id="nickname" name="nickname" placeholder="你的昵称" value="游侠001" maxlength="30" style="line-height: 30px;width: 250px;">&nbsp;<span id="nicknamewarn" style="color: red;display: none;">请输入你的昵称</span></p>
+        <p><textarea id="comment" name="comment" placeholder="说说你的个人见解，让更多人看到" style="width: 100%;height: 100px;" maxlength="200"></textarea>&nbsp;<span id="commentwarn" style="color: red;display: none;">请输入不少于10个字的评论</span></p></div></div>
+        
+    </form>
+    <p><button onclick="return submitComment();">提交</button></p>
+    </div>
+
+
+    <div class="container">
+        <div class="solidline"></div>
+    </div>
+
+    <div class="" id="templatemo_footer">
+        <div class="col-md-24">
+            <p>Copyright &copy; 2021 上海大学 | <a href="#">图书共享</a> </p>
+        </div>
+    </div> 
+
+<script src="__PUBLIC__/js/jquery.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.scrollto.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.easing.min.js"></script>
+    <script src="__PUBLIC__/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.lightbox.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.flexslider.js"></script>
+    <script src="__PUBLIC__/js/jquery.singlePageNav.min.js"></script>
+    <script src="__PUBLIC__/js/templatemo_script.js?v=2389"></script>
+
+<script type="text/javascript">
+  function submitComment(){
+    if($("#nickname").val()==""){
+        $("#nicknamewarn").show();
+        return false;
+    }
+    $("#nicknamewarn").hide();
+    if($("#comment").val().length<10){
+        $("#commentwarn").show();
+        return false;
+    }
+    $("#commentwarn").hide();
+    $("form").submit();
+  }
+  loadInitComment();
+  function loadInitComment(){
+        $.get('__URL__/loadMoreComment?page=1&bookid='+$("#bookid").val(),function(result){
+            if(result!=null && result!=false){
+                for(var i=0;i<result.length;i++){
+                　
+                    var content='<div class="row"><div class="col-sm-15"><h2></h2><p><span class="glyphicon glyphicon-user"></span>&nbsp;'+result[i].nick_name+'&nbsp;&nbsp;<span class="glyphicon glyphicon-calendar"></span>&nbsp;'+result[i].create_time+'&nbsp;&nbsp;</p><p>'+result[i].comment_content+'</p></div></div>';
+                    $("#contentContainer").append(content);
+                }
+            }
+
+        },'json');
+    }
+    var page=1;
+    function loadMore(){
+        page=page+1;
+        $.get('__URL__/loadMoreComment?page='+page+'&bookid='+$("#bookid").val(),function(result){
+            if(result==null || result==false){
+                $("#loadMore").html("没有更多了").unbind("click");
+                return;
+            }
+            for(var i=0;i<result.length;i++){
+            　
+                var content='<div class="row"><div class="col-sm-15"><h2></h2><p><span class="glyphicon glyphicon-user"></span>&nbsp;'+result[i].nick_name+'&nbsp;&nbsp;<span class="glyphicon glyphicon-calendar"></span>&nbsp;'+result[i].create_time+'&nbsp;&nbsp;</p><p>'+result[i].comment_content+'</p></div></div>';
+                $("#contentContainer").append(content);
+            }
+            
+        },'json');
+    }
+    $("#loadMore").bind("click",function(){
+        loadMore();
+    })
+</script>
+</body>
+
+</html>
